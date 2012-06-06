@@ -1,0 +1,57 @@
+ 
+ 
+    
+     
+     
+    +--------------------------------------------------------------------------------------------------------+
+    |                                                                                                        |
+    | GET           TRANSFORM             OUTPUT                                                             |
+    |                                                                                                        |
+    |                                                                                                        |
+    +--------------------------------------------------------------------------------------------------------+
+     
+     
+    GET
+    transport: (ssh, https, snmp, ...)
+
+
+    TRANSFORM
+    input: std in [, optional arguments via command line, etc. to
+        provide for parameterization [from FEEDBACK, ...]]
+    output: one or more (named?) streams
+
+    what is the api? how can we allow arbitrary scripts/execs as transform plugins
+    with minimal boilerplate, etc.?
+
+
+    OUTPUT/COLLECTION
+
+    maybe, instead of "output" this is more like the connector between
+    states/blocks, allowing more arbitrary/programmable routes for data
+
+
+    [FEEDBACK]
+
+
+
+                                     ____ +--------------+
+    +-----+      +-----------+  ____/     | OUTPUT       |
+    | GET | ---> | TRANSFORM |  ____------+---+          |
+    +-----+      +-+---------+      \____ |   |          |
+       ^           ^                      +---+----------+
+       |           |                          |
+       |           | +--------+               |
+       +-----------+-+FEEDBACK|<--------------+
+                     +--------+               
+                                              
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     

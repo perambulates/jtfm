@@ -16,7 +16,7 @@
 
 
     TRANSFORM
-    input: std in [, optional arguments via command line, etc. to
+    input: stdin [, optional arguments via command line, etc. to
         provide for parameterization [from FEEDBACK, ...]]
     output: one or more (named?) streams
 
@@ -32,19 +32,33 @@
 
     [FEEDBACK]
 
-
-
                                      ____ +--------------+
     +-----+      +-----------+  ____/     | OUTPUT       |
-    | GET | ---> | TRANSFORM |  ____------+---+          |
-    +-----+      +-+---------+      \____ |   |          |
+    | GET | ---> | TRANSFORM |  ____------+--------------+---->  [key value, csv, flume, ...]
+    +-----+      +-+---------+      \___--+---+          |         
        ^           ^                      +---+----------+
        |           |                          |
        |           | +--------+               |
        +-----------+-+FEEDBACK|<--------------+
                      +--------+               
                                               
-     
+    Poll:
+        Get_a
+        Get_b
+
+        Tra_x
+        Tra_y
+    
+    ---------------------------------
+
+    GET has simple requirements, and each instance could be easily
+    implemented in anything, including shell script.
+    TRA could benefit from additional structure: one stream in, but
+    potentially >1 stream out. some options:
+      * could write TRA as python plugin (template subclass, overriding
+        methods as needed). declaring "type" of TRA could allow dropping
+        in anything that returns csv (or similar convention) to provide
+        different streams. 
      
      
      

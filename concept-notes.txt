@@ -1,0 +1,19 @@
+
+express a poll as function composition
+
+Suppose:
+
+classes of hosts to poll:
+
+desktops
+    windows
+    linux
+servers (happen to all be linux in this example. ha!)
+    web
+    db
+    file
+
+class membership not (necessarily) known a priori
+
+a GET/TRA pair that outputs a 
+

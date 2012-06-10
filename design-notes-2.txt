@@ -8,20 +8,91 @@ require_get("get_os")
 provide_keys(["os_name","os_type")
 
 
+contrived example that requires a value for which column of /etc/passwd
+contains the user shell entries:
 ---------
 require_get("etc_passwd")
 provide_keys(["users_with_no_shell"])
+require_keys('etc_passwd_shell_column', 'os_type')
+
+def skip():
+    os_type = get_key('os_type')
+    return os_type not in ('linux', 'unix')
 
 import re
 lines_re=re.compile(r'[\n]+')
 cols_re=re.compile(r':')
 
 def transform(data):
-    """look through our input to identify users with no shell or shell
-    that is /bin/false"""
-    all_users = (cols_re.split(l.rstrip())[0:7:6] for l in lines_re.split(data.rstrip()))
+    """
+    look through our input to identify users with no shell or shell
+    that is /bin/false
+    
+    outputs a dictionary like the following:
+    { 'users_with_no_shell': ['syslog', 'messagebus', ...] }
+    """
+    col = get_key("etc_passwd_shell_column")
+    all_users = (cols_re.split(l.rstrip())[0:col+1:col] for l in lines_re.split(data.rstrip()))
     #print repr(all_users)
     sans_shell = [u[0] for u in all_users if not u[1] or u[1] == '/bin/false']
     #return {'users_with_no_homes': [filter(lambda u: not u[1], all_users)] }
     return {'users_with_no_shell': sans_shell}
+
+--------------------
+
+alternative to require_get, provide_keys, require_keys:
+make use of attributes.
+--------------------
+
+import re
+
+lines_re=re.compile(r'[\n]+')
+cols_re=re.compile(r':')
+
+class passwd_info(Transform):
+    def __init__(self):
+        self.required_keys = ['etc_passwd_shell_column', 'os_type']
+        self.provided_keys = ['users_with_no_shell']
+
+    def transform(self, data):
+        """
+        look through our input to identify users with no shell or shell
+        that is /bin/false
+        
+        outputs a dictionary like the following:
+        { 'users_with_no_shell': ['syslog', 'messagebus', ...] }
+        """
+        col = get_key("etc_passwd_shell_column")
+        all_users = (cols_re.split(l.rstrip())[0:col+1:col] for l in lines_re.split(data.rstrip()))
+        sans_shell = [u[0] for u in all_users if not u[1] or u[1] == '/bin/false']
+        return {'users_with_no_shell': sans_shell}
+
+
+---------------------
+
+import re
+
+lines_re=re.compile(r'[\n]+')
+cols_re=re.compile(r':')
+required_keys = ['etc_passwd_shell_column', 'os_type']
+provided_keys = ['users_with_no_shell']
+
+class passwd_info(Transform):
+    def __init__(self):
+        self.required_keys = ['etc_passwd_shell_column', 'os_type']
+        self.provided_keys = ['users_with_no_shell']
+
+    def transform(self, data):
+        """
+        look through our input to identify users with no shell or shell
+        that is /bin/false
+        
+        outputs a dictionary like the following:
+        { 'users_with_no_shell': ['syslog', 'messagebus', ...] }
+        """
+        col = get_key("etc_passwd_shell_column")
+        all_users = (cols_re.split(l.rstrip())[0:col+1:col] for l in lines_re.split(data.rstrip()))
+        sans_shell = [u[0] for u in all_users if not u[1] or u[1] == '/bin/false']
+        return {'users_with_no_shell': sans_shell}
+
 

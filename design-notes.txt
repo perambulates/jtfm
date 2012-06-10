@@ -60,7 +60,23 @@
         in anything that returns csv (or similar convention) to provide
         different streams. 
      
+    ---------------------------------
      
+    an api that would allow transforms to be written in anything could be...
+    output to stdout as csv the following:
+    fact_name,fact_value,fact_store
+    os_type,linux,
+
+    fact_value is the inline value of the fact, if left empty, then we look for
+    fact_store we should specify as one of the following:
+
+    path to file whose contents comprise fact_value
+    or
+    key to use to lookup value in database. thought: this could be a git sha
+    or...
+
+
+
      
      
      

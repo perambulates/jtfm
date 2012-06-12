@@ -1,0 +1,32 @@
+#!/usr/bin/python
+
+import os, sys
+
+# TODO: dynamically generate the list of transforms
+#$transform_names = map (lambda n: 'transform.'+ n, ['passwd_info'])
+import transform
+transform_names = ['passwd_info']
+
+transforms = map(lambda t: __import__('transform.' + t,fromlist=transform_names,level=1), transform_names)
+
+print dir()
+
+data=''
+with open('/etc/passwd', 'r') as p:
+    data = p.read()
+
+for t in transforms:
+    print "--- %s ---" % t.__name__
+    print dir(t)
+
+
+# following based on
+# http://code.activestate.com/recipes/436873-import-modulesdiscover-methods-from-a-directory-na/
+def import_modules(dir="./transform"):
+    module_list = []
+    for f in os.listdir(os.path.abspath(dir)):
+        module_name, ext = os.path.splitext(f)
+        print 'imported module: %s' % (module_name)
+        module = __import__(module_name)
+        module_list.append(module)
+

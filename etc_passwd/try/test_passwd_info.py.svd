@@ -1,0 +1,17 @@
+#!/usr/bin/python
+
+# TODO: dynamically generate the list of transforms
+transform_names = map (lambda n: 'transform.'+ n, ['passwd_info'])
+
+transforms = map(__import__, transform_names)
+
+dir()
+
+data=''
+with open('/etc/passwd', 'r') as p:
+    data = p.read()
+
+for t in transforms:
+    print "--- %s ---" % t.__name__
+    dir(t)
+

@@ -1,0 +1,36 @@
+
+each TRA:
+
+* requires 1 GET
+* requires [0,...) facts
+* provides (1,...) facts
+* specify [0,...) class restrictions. A class restriction takes one of the
+    following forms:
+        skip if fact[i] in/not in [set of values]
+        include if fact[i] in/not in [set of values]
+
+* for any fact:
+fact_key_name,status,value/handle
+where status can be one of:
+    [NotApplicable,Available,Error]
+
+Given:
+* library of GETs and TRAs
+* set of desired facts
+ 
+use topological sort to find paths to all desired facts. Note: but not quite
+applicable: we want to prune unnecessary GETs and TRAs, not visit every one.
+Only need to visit every fact required by report.
+
+The reporting interface can simply use a standard templating system
+to form anything (emails, reports, spreadsheets, etc.)
+
+A default report would simply be a CSV like the following:
+
+...
+node[i],fact_name[j],fact_status[j],fact_value[j]
+node[i],fact_name[j+1],fact_status[j+1],fact_value[j+1]
+...
+node[i+1],fact_name[1],fact_status[1],fact_value[1]
+...
+

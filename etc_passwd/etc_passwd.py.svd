@@ -1,0 +1,23 @@
+#!/usr/bin/python
+
+import re
+lines_re=re.compile(r'[\n]+')
+cols_re=re.compile(r':')
+
+def handle_data(data):
+    all_users = (cols_re.split(l.rstrip())[0:7:6] for l in lines_re.split(data.rstrip()))
+    print repr(all_users)
+    sans_shell = [u[0] for u in all_users if not u[1] or u[1] == '/bin/false']
+    #return {'users_with_no_homes': [filter(lambda u: not u[1], all_users)] }
+    return {'users_with_no_shell': sans_shell}
+
+
+data=''
+with open('/etc/passwd', 'r') as p:
+    data=p.read()
+
+results = handle_data(data)
+
+print "results:"
+print repr(results)
+
